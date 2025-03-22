@@ -1,0 +1,52 @@
+.user-list-container {
+  padding: 20px;
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h2 {
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+
+  .actions-row {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  .status-active {
+    color: #4caf50;
+    font-weight: 500;
+  }
+
+  .status-inactive {
+    color: #f44336;
+    font-weight: 500;
+  }
+
+  .no-data {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: rgba(0, 0, 0, 0.54);
+  }
+
+  mat-paginator {
+    margin-top: 20px;
+  }
+}

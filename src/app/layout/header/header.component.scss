@@ -1,0 +1,25 @@
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  font-weight: 500;
+  color: black;
+}
+
+.logo {
+  text-decoration: none;
+  color: black;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.mat-toolbar {
+  font-weight: 500;
+  color: black;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

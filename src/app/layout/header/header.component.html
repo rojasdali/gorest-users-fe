@@ -1,0 +1,12 @@
+<mat-toolbar color="primary" class="app-header">
+  <a class="logo" routerLink="/">{{ appTitle }}</a>
+  <span class="spacer"></span>
+  <button
+    mat-icon-button
+    aria-label="API Documentation"
+    matTooltip="API Documentation"
+    (click)="openApiDocs()"
+  >
+    <mat-icon>help_outline</mat-icon>
+  </button>
+</mat-toolbar>
