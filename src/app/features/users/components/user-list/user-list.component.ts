@@ -239,6 +239,27 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.filterChange$.next(filter);
   }
 
+  private userMatchesFilter(user: User): boolean {
+    if (!this.filter) return true;
+
+    if (this.filter.status !== 'all' && user.status !== this.filter.status) {
+      return false;
+    }
+
+    if (this.filter.gender !== 'all' && user.gender !== this.filter.gender) {
+      return false;
+    }
+
+    if (this.filter.searchTerm) {
+      const term = this.filter.searchTerm.toLowerCase();
+      const nameMatch = user.name.toLowerCase().includes(term);
+      const emailMatch = user.email.toLowerCase().includes(term);
+      if (!nameMatch && !emailMatch) return false;
+    }
+
+    return true;
+  }
+
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(UserCreateDialogComponent, {
       width: '500px',
@@ -250,14 +271,23 @@ export class UserListComponent implements OnInit, OnDestroy {
         const pendingNotification =
           this.notification.showInfo('Creating user...');
 
-        this.users = [optimisticUser, ...this.users];
+        const shouldShowInUI = this.userMatchesFilter(optimisticUser);
+
+        if (shouldShowInUI) {
+          this.users = [optimisticUser, ...this.users];
+        }
+
         this.totalUsers++;
 
         this.userService.createUser(formData).subscribe({
           next: (newUser) => {
-            this.users = this.users.map((user) =>
-              user.id === optimisticUser.id ? newUser : user
-            );
+            if (shouldShowInUI) {
+              this.users = this.users.map((user) =>
+                user.id === optimisticUser.id ? newUser : user
+              );
+            } else if (this.userMatchesFilter(newUser)) {
+              this.users = [newUser, ...this.users];
+            }
 
             this.notification.dismiss(pendingNotification);
             this.notification.showSuccess('User created successfully');
@@ -265,9 +295,11 @@ export class UserListComponent implements OnInit, OnDestroy {
           error: (error) => {
             console.error('Error creating user:', error);
 
-            this.users = this.users.filter(
-              (user) => user.id !== optimisticUser.id
-            );
+            if (shouldShowInUI) {
+              this.users = this.users.filter(
+                (user) => user.id !== optimisticUser.id
+              );
+            }
             this.totalUsers--;
 
             this.notification.dismiss(pendingNotification);
