@@ -66,7 +66,6 @@ export class LoginComponent {
     this.loading = true;
     const { username, password } = this.loginForm.value;
 
-    // Check for specific credentials
     if (username === this.VALID_USERNAME && password === this.VALID_PASSWORD) {
       this.authService.login(username);
       this.router.navigate(['/users']);
