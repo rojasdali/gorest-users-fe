@@ -1,6 +1,9 @@
-<mat-toolbar color="primary" class="app-header">
-  <a class="logo" routerLink="/">{{ appTitle }}</a>
+<mat-toolbar color="white" class="app-header">
+  <a class="logo" [routerLink]="username ? '/users' : '/login'">{{
+    appTitle
+  }}</a>
   <span class="spacer"></span>
+
   <button
     mat-icon-button
     aria-label="API Documentation"
@@ -9,4 +12,17 @@
   >
     <mat-icon>help_outline</mat-icon>
   </button>
+
+  <div *ngIf="username" class="user-profile">
+    <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-button">
+      <mat-icon>account_circle</mat-icon>
+      <span class="username">{{ username }}</span>
+    </button>
+    <mat-menu #profileMenu="matMenu">
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </div>
 </mat-toolbar>

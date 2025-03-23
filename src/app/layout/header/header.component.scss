@@ -1,18 +1,20 @@
+@use "variables" as v;
+
 .app-header {
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
   z-index: 1000;
-  font-weight: 500;
-  color: black;
+  padding: 0 20px;
+  box-shadow: v.$shadow-card;
+  background-color: v.$color-background;
 }
 
 .logo {
+  color: v.$color-text-primary;
   text-decoration: none;
-  color: black;
-  font-weight: 700;
   font-size: 1.2rem;
+  font-weight: v.$font-weight-bold;
+  padding-left: v.$spacing-xs;
 }
 
 .mat-toolbar {
@@ -22,4 +24,28 @@
 
 .spacer {
   flex: 1 1 auto;
+}
+
+.user-profile {
+  margin-left: v.$spacing-md;
+  display: flex;
+  align-items: center;
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  padding-right: v.$spacing-xs;
+}
+
+.username {
+  margin-left: v.$spacing-sm;
+  font-weight: v.$font-weight-medium;
+  color: v.$color-text-primary;
+}
+
+@media (max-width: 600px) {
+  .username {
+    display: none;
+  }
 }
