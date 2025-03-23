@@ -5,6 +5,13 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const materialModules = [
   MatButtonModule,
@@ -13,6 +20,13 @@ const materialModules = [
   MatPaginatorModule,
   MatIconModule,
   MatProgressSpinnerModule,
+  MatFormFieldModule,
+  MatSelectModule,
+  MatCardModule,
+  MatChipsModule,
+  MatInputModule,
+  MatDialogModule,
+  MatSnackBarModule,
 ];
 
 @NgModule({
