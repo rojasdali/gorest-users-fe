@@ -11,8 +11,8 @@
   ],
   "build": {
     "env": {
-      "NG_APP_API_TOKEN": "@api_token",
-      "NG_APP_API_URL": "@api_url"
+      "NG_APP_API_TOKEN": "@API_TOKEN",
+      "NG_APP_API_URL": "@API_URL"
     }
   }
 }
