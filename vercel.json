@@ -11,8 +11,8 @@
   ],
   "build": {
     "env": {
-      "API_TOKEN": "@API_TOKEN",
-      "API_URL": "@API_URL"
+      "API_TOKEN": "$API_TOKEN",
+      "API_URL": "$API_URL"
     }
   }
 }
