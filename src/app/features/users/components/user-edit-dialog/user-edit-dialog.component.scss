@@ -1,0 +1,16 @@
+@use "variables" as v;
+
+.form-field-container {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-md;
+  margin-bottom: v.$spacing-md;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.mat-mdc-dialog-actions {
+  padding-bottom: v.$spacing-md;
+}
