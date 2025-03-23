@@ -5,6 +5,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 
 import { MaterialModule } from '@shared/material.module';
 import { UserFormService } from '@users/services';
+import { User } from '@users/models';
 
 import { BaseUserDialogComponent } from '../base-user-dialog/base-user-dialog.component';
 
@@ -31,6 +32,15 @@ export class UserCreateDialogComponent extends BaseUserDialogComponent {
     }
 
     this.loading = true;
-    this.dialogRef.close(this.userForm.value);
+
+    const optimisticUser: User = {
+      ...this.userForm.value,
+      id: -Math.floor(Math.random() * 1000) - 1,
+    };
+
+    this.dialogRef.close({
+      formData: this.userForm.value,
+      optimisticUser,
+    });
   }
 }

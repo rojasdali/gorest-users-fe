@@ -178,30 +178,33 @@ export class UserListComponent implements OnInit, OnDestroy {
       width: '500px',
     });
 
-    dialogRef.afterClosed().subscribe((userData) => {
-      if (userData) {
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const { formData, optimisticUser } = result;
         const pendingNotification =
           this.notification.showInfo('Creating user...');
 
-        this.userService.createUser(userData).subscribe({
-          next: (newUser) => {
-            if (this.currentPage === 0 && this.users.length < this.pageSize) {
-              this.users = [newUser, ...this.users];
-            }
+        // Optimistically add user to the displayed list
+        this.users = [optimisticUser, ...this.users];
+        this.totalUsers++;
 
-            this.totalUsers++;
+        this.userService.createUser(formData).subscribe({
+          next: (newUser) => {
+            // Replace optimistic user with actual user from server
+            this.users = this.users.map((user) =>
+              user.id === optimisticUser.id ? newUser : user
+            );
 
             this.notification.dismiss(pendingNotification);
             this.notification.showSuccess('User created successfully');
-
-            if (
-              !(this.currentPage === 0 && this.users.length <= this.pageSize)
-            ) {
-              this.loadUsers();
-            }
           },
           error: (error) => {
             console.error('Error creating user:', error);
+
+            this.users = this.users.filter(
+              (user) => user.id !== optimisticUser.id
+            );
+            this.totalUsers--;
 
             this.notification.dismiss(pendingNotification);
             this.notification.showError(
