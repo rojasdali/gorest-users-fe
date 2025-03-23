@@ -1,0 +1,39 @@
+@use "variables" as v;
+
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 70vh;
+  padding: v.$spacing-xxl;
+}
+
+.error-icon {
+  font-size: 5rem;
+  height: 5rem;
+  width: 5rem;
+  color: v.$color-warn;
+  margin-bottom: v.$spacing-md;
+}
+
+h1 {
+  font-size: v.$font-size-display;
+  margin: 0;
+  color: v.$color-warn;
+}
+
+h2 {
+  font-size: v.$font-size-headline;
+  margin-top: v.$spacing-xs;
+  margin-bottom: v.$spacing-md;
+  font-weight: v.$font-weight-medium;
+}
+
+p {
+  font-size: v.$font-size-subtitle;
+  margin-bottom: v.$spacing-lg;
+  color: v.$color-text-secondary;
+  max-width: 600px;
+}
