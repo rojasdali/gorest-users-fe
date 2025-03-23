@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '@shared/material.module';
+import { MatTableModule } from '@angular/material/table';
 import { User } from '@users/models';
 import { MatDialog } from '@angular/material/dialog';
 import { UserDeleteDialogComponent } from '../user-delete-dialog/user-delete-dialog.component';
@@ -16,7 +17,7 @@ interface TableColumn {
 @Component({
   selector: 'app-user-table',
   standalone: true,
-  imports: [CommonModule, MaterialModule],
+  imports: [CommonModule, MaterialModule, MatTableModule],
   templateUrl: './user-table.component.html',
   styleUrl: './user-table.component.scss',
 })
