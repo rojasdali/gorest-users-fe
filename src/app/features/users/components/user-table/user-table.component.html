@@ -1,0 +1,118 @@
+<div class="table-container">
+  <table
+    mat-table
+    [dataSource]="users"
+    *ngIf="!loading"
+    class="mat-elevation-z2"
+  >
+    <ng-container
+      *ngFor="let column of standardColumns"
+      [matColumnDef]="column.field"
+    >
+      <th mat-header-cell *matHeaderCellDef [class]="'user-' + column.field">
+        {{ column.header }}
+      </th>
+      <td mat-cell *matCellDef="let user" [class]="'user-' + column.field">
+        {{ user[column.field] | titlecase }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef class="user-status">Status</th>
+      <td mat-cell *matCellDef="let user" class="user-status">
+        <ng-container
+          *ngTemplateOutlet="statusChip; context: { $implicit: user.status }"
+        ></ng-container>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="user-actions">Actions</th>
+      <td mat-cell *matCellDef="let user" class="user-actions">
+        <button
+          mat-icon-button
+          color="accent"
+          class="action-button"
+          (click)="$event.stopPropagation(); onEditUser(user.id)"
+          matTooltip="Edit user"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="warn"
+          (click)="$event.stopPropagation(); onDeleteUser(user)"
+          matTooltip="Delete user"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns; trackBy: trackByUserId"
+      (click)="onViewUser(row.id)"
+      class="clickable-row mat-row-custom"
+    ></tr>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td
+        class="mat-cell no-data-message"
+        [attr.colspan]="displayedColumns.length"
+      >
+        No users found
+      </td>
+    </tr>
+  </table>
+
+  <table
+    mat-table
+    [dataSource]="skeletonData"
+    class="mat-elevation-z2"
+    *ngIf="loading"
+  >
+    <ng-container
+      *ngFor="let column of standardColumns"
+      [matColumnDef]="column.field"
+    >
+      <th mat-header-cell *matHeaderCellDef [class]="'user-' + column.field">
+        {{ column.header }}
+      </th>
+      <td mat-cell *matCellDef="let item" [class]="'user-' + column.field">
+        <div class="skeleton-line"></div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef class="user-status">Status</th>
+      <td mat-cell *matCellDef="let item" class="user-status">
+        <div class="skeleton-chip"></div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="user-actions">Actions</th>
+      <td mat-cell *matCellDef="let item" class="user-actions">
+        <div class="skeleton-actions">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line"></div>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      class="mat-row-custom"
+    ></tr>
+  </table>
+</div>
+
+<ng-template #statusChip let-status>
+  <mat-chip class="status-chip" [ngClass]="getStatusClass(status)">
+    {{ status | titlecase }}
+  </mat-chip>
+</ng-template>
