@@ -1,3 +1,5 @@
+@use "variables" as v;
+
 /* Global styles */
 html,
 body {
@@ -43,4 +45,51 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-primary {
+  color: v.$color-primary;
+}
+
+// Snackbar styles
+.success-snackbar {
+  background-color: #4caf50;
+  color: white;
+
+  .mdc-snackbar__action {
+    color: white;
+  }
+}
+
+.error-snackbar {
+  background-color: #f44336;
+  color: white;
+
+  .mdc-snackbar__action {
+    color: white;
+  }
+}
+
+.info-snackbar {
+  background-color: #2196f3;
+  color: white;
+
+  .mdc-snackbar__action {
+    color: white;
+  }
+}
+
+// Global dialog styling
+.mat-mdc-dialog-container {
+  .mat-mdc-dialog-title {
+    padding: v.$spacing-md v.$spacing-lg v.$spacing-sm;
+  }
+
+  .mat-mdc-dialog-content {
+    padding: 0 v.$spacing-lg;
+  }
+
+  .mat-mdc-dialog-actions {
+    padding: v.$spacing-md v.$spacing-lg v.$spacing-lg;
+  }
 }

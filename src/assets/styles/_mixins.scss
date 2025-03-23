@@ -1,0 +1,25 @@
+@use "variables" as v;
+
+@mixin text-body-small {
+  font-family: v.$font-family-base;
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-regular;
+  line-height: v.$line-height-normal;
+  color: v.$color-text-primary;
+}
+
+@mixin text-caption {
+  font-family: v.$font-family-base;
+  font-size: v.$font-size-caption;
+  font-weight: v.$font-weight-regular;
+  line-height: v.$line-height-tight;
+  color: v.$color-text-secondary;
+}
+
+@mixin text-heading {
+  font-family: v.$font-family-base;
+  font-size: v.$font-size-title;
+  font-weight: v.$font-weight-medium;
+  line-height: v.$line-height-tight;
+  color: v.$color-text-primary;
+}
