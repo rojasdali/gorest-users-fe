@@ -27,6 +27,10 @@ export class LoginComponent {
   readonly passwordMinLength = 6;
   readonly passwordMaxLength = 30;
 
+  // Specific credentials for demo purposes
+  private readonly VALID_USERNAME = 'admin';
+  private readonly VALID_PASSWORD = 'MoCaFi';
+
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -62,11 +66,13 @@ export class LoginComponent {
     this.loading = true;
     const { username, password } = this.loginForm.value;
 
-    if (username && password) {
+    // Check for specific credentials
+    if (username === this.VALID_USERNAME && password === this.VALID_PASSWORD) {
       this.authService.login(username);
       this.router.navigate(['/users']);
     } else {
-      this.error = 'Please enter both username and password';
+      this.error =
+        'Invalid credentials. User does not exist or password is incorrect.';
       this.loading = false;
     }
   }
