@@ -52,8 +52,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr
       mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      [matRowDefTrackBy]="trackByUserId"
+      *matRowDef="let row; columns: displayedColumns; trackBy: trackByUserId"
       (click)="onViewUser(row.id)"
       class="clickable-row mat-row-custom"
     ></tr>
@@ -106,7 +105,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr
       mat-row
-      *matRowDef="let row; columns: displayedColumns"
+      *matRowDef="let row; columns: displayedColumns; trackBy: trackByIndex"
       class="mat-row-custom"
     ></tr>
   </table>

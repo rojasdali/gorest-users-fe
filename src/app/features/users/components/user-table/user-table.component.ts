@@ -98,6 +98,10 @@ export class UserTableComponent implements OnInit {
     return user.id;
   }
 
+  trackByIndex(index: number): number {
+    return index;
+  }
+
   getStatusClass(status: string): string {
     return status === 'active' ? 'status-active' : 'status-inactive';
   }

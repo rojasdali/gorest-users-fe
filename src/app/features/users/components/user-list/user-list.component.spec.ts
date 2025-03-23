@@ -5,6 +5,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { UserListComponent } from './user-list.component';
 import { UserService } from '@users/services';
@@ -51,6 +52,7 @@ describe('UserListComponent', () => {
         { provide: UserService, useValue: userServiceMock },
         { provide: NotificationService, useValue: notificationServiceMock },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserListComponent);
