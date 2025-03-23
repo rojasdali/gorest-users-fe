@@ -4,10 +4,5 @@
   "outputDirectory": "dist/gorest-users-fe",
   "github": {
     "silent": true
-  },
-  "build": {
-    "env": {
-      "API_TOKEN": "@api_token"
-    }
   }
 }
