@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://gorest.co.in/public/v2',
+  apiUrl: '${API_URL}',
   apiToken: '${API_TOKEN}',
 };
