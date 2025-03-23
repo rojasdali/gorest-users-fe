@@ -1,166 +1,175 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, delay } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, catchError, map, throwError, forkJoin, of } from 'rxjs';
 import { UserFilter } from '@users/components/user-filter/user-filter.component';
 import { User, UserResponse } from '@users/models/user.model';
+import { environment } from '@environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private mockUsers: User[] = [
-    {
-      id: 1,
-      name: 'John Doe',
-      email: 'john@example.com',
-      gender: 'male',
-      status: 'active',
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      gender: 'female',
-      status: 'active',
-    },
-    {
-      id: 3,
-      name: 'Bob Johnson',
-      email: 'bob@example.com',
-      gender: 'male',
-      status: 'inactive',
-    },
-    {
-      id: 4,
-      name: 'Sarah Williams',
-      email: 'sarah@example.com',
-      gender: 'female',
-      status: 'active',
-    },
-    {
-      id: 5,
-      name: 'Michael Brown',
-      email: 'michael@example.com',
-      gender: 'male',
-      status: 'inactive',
-    },
-    {
-      id: 6,
-      name: 'John Doe',
-      email: 'john2@example.com',
-      gender: 'male',
-      status: 'active',
-    },
-    {
-      id: 7,
-      name: 'Jane Smith',
-      email: 'jane2@example.com',
-      gender: 'female',
-      status: 'active',
-    },
-    {
-      id: 8,
-      name: 'Bob Johnson',
-      email: 'bob2@example.com',
-      gender: 'male',
-      status: 'inactive',
-    },
-    {
-      id: 9,
-      name: 'Sarah Williams',
-      email: 'sarah2@example.com',
-      gender: 'female',
-      status: 'active',
-    },
-    {
-      id: 10,
-      name: 'Michael Brown',
-      email: 'michael2@example.com',
-      gender: 'male',
-      status: 'inactive',
-    },
-  ];
+  private apiUrl = environment.apiUrl || 'https://gorest.co.in/public/v2';
+
+  constructor(private http: HttpClient) {}
 
   getUsers(
     page: number = 1,
-    limit: number = 10,
+    perPage: number = 10,
     filter?: UserFilter
   ): Observable<UserResponse> {
-    let filteredUsers = [...this.mockUsers];
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('per_page', perPage.toString());
 
     if (filter) {
-      if (filter.searchTerm) {
-        const searchTerm = filter.searchTerm.toLowerCase();
-        filteredUsers = filteredUsers.filter(
-          (user) =>
-            user.name.toLowerCase().includes(searchTerm) ||
-            user.email.toLowerCase().includes(searchTerm)
-        );
+      if (filter.status && filter.status !== 'all') {
+        params = params.set('status', filter.status);
       }
-
-      if (filter.status !== 'all') {
-        filteredUsers = filteredUsers.filter(
-          (user) => user.status === filter.status
-        );
-      }
-
-      if (filter.gender !== 'all') {
-        filteredUsers = filteredUsers.filter(
-          (user) => user.gender === filter.gender
-        );
+      if (filter.gender && filter.gender !== 'all') {
+        params = params.set('gender', filter.gender);
       }
     }
 
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+    if (filter?.searchTerm) {
+      return this.combineSearchResults(filter, page, perPage);
+    }
 
-    return of({
-      data: paginatedUsers,
+    return this.http
+      .get<User[]>(`${this.apiUrl}/users`, { params, observe: 'response' })
+      .pipe(
+        map((response) => this.processResponse(response)),
+        catchError((error) => {
+          console.error('Error fetching users:', error);
+          return throwError(() => new Error('Failed to load users from API'));
+        })
+      );
+  }
+
+  private combineSearchResults(
+    filter: UserFilter,
+    page: number,
+    perPage: number
+  ): Observable<UserResponse> {
+    const nameSearchObs = this.searchByField('name', filter, page, perPage);
+    const emailSearchObs = this.searchByField('email', filter, page, perPage);
+
+    return forkJoin([nameSearchObs, emailSearchObs]).pipe(
+      map(([nameResults, emailResults]) => {
+        const allUsers = [...nameResults.data, ...emailResults.data];
+        const uniqueUsers = allUsers.filter(
+          (user, index, self) =>
+            index === self.findIndex((u) => u.id === user.id)
+        );
+
+        const totalCount = uniqueUsers.length;
+        const totalPages = Math.ceil(totalCount / perPage);
+        const validPage = page > totalPages ? totalPages : page;
+
+        const startIndex = (validPage - 1) * perPage;
+        const endIndex = Math.min(startIndex + perPage, totalCount);
+        const pagedUsers = uniqueUsers.slice(startIndex, endIndex);
+
+        return {
+          data: pagedUsers,
+          meta: {
+            pagination: {
+              total: totalCount,
+              pages: totalPages,
+              page: validPage,
+              limit: perPage,
+            },
+          },
+        };
+      })
+    );
+  }
+
+  private processResponse(response: any): UserResponse {
+    const totalCount = response.headers.get('x-pagination-total') || '0';
+    const totalPages = response.headers.get('x-pagination-pages') || '0';
+    const currentPage = response.headers.get('x-pagination-page') || '0';
+    const perPage = response.headers.get('x-pagination-limit') || '0';
+
+    return {
+      data: response.body || [],
       meta: {
         pagination: {
-          total: filteredUsers.length,
-          pages: Math.ceil(filteredUsers.length / limit),
-          page: page,
-          limit: limit,
+          total: parseInt(totalCount, 10),
+          pages: parseInt(totalPages, 10),
+          page: parseInt(currentPage, 10),
+          limit: parseInt(perPage, 10),
         },
       },
-    }).pipe(delay(500));
+    };
   }
 
   getUserById(id: number): Observable<User | undefined> {
-    const user = this.mockUsers.find((user) => user.id === id);
-    return of(user).pipe(delay(500));
+    return this.http.get<User>(`${this.apiUrl}/users/${id}`).pipe(
+      catchError((error) => {
+        console.error('Error fetching user:', error);
+        return throwError(() => new Error('Failed to load user'));
+      })
+    );
   }
 
   createUser(userData: Omit<User, 'id'>): Observable<User> {
-    const maxId = Math.max(...this.mockUsers.map((user) => user.id), 0);
-    const newUser: User = {
-      ...userData,
-      id: maxId + 1,
-    };
-
-    this.mockUsers.unshift(newUser);
-
-    return of(newUser).pipe(delay(500));
+    return this.http.post<User>(`${this.apiUrl}/users`, userData).pipe(
+      catchError((error) => {
+        console.error('Error creating user:', error);
+        return throwError(() => new Error('Failed to create user'));
+      })
+    );
   }
 
   updateUser(user: User): Observable<User> {
-    const userIndex = this.mockUsers.findIndex((u) => u.id === user.id);
-
-    if (userIndex !== -1) {
-      this.mockUsers[userIndex] = { ...user };
-    }
-
-    return of(user).pipe(delay(500));
+    return this.http.put<User>(`${this.apiUrl}/users/${user.id}`, user).pipe(
+      catchError((error) => {
+        console.error('Error updating user:', error);
+        return throwError(() => new Error('Failed to update user'));
+      })
+    );
   }
 
   deleteUser(id: number): Observable<boolean> {
-    const userIndex = this.mockUsers.findIndex((user) => user.id === id);
+    return this.http.delete(`${this.apiUrl}/users/${id}`).pipe(
+      map(() => true),
+      catchError((error) => {
+        console.error('Error deleting user:', error);
+        return throwError(() => new Error('Failed to delete user'));
+      })
+    );
+  }
 
-    if (userIndex !== -1) {
-      this.mockUsers.splice(userIndex, 1);
+  private searchByField(
+    field: string,
+    filter: UserFilter,
+    page: number,
+    perPage: number
+  ): Observable<UserResponse> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('per_page', perPage.toString())
+      .set(field, filter.searchTerm);
+
+    if (filter.status && filter.status !== 'all') {
+      params = params.set('status', filter.status);
+    }
+    if (filter.gender && filter.gender !== 'all') {
+      params = params.set('gender', filter.gender);
     }
 
-    return of(true).pipe(delay(500));
+    return this.http
+      .get<User[]>(`${this.apiUrl}/users`, { params, observe: 'response' })
+      .pipe(
+        map((response) => this.processResponse(response)),
+        catchError((error) => {
+          console.error(`Error searching by ${field}:`, error);
+          return of({
+            data: [],
+            meta: { pagination: { total: 0, pages: 0, page: 0, limit: 0 } },
+          });
+        })
+      );
   }
 }

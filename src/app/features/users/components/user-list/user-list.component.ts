@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 
@@ -11,6 +11,8 @@ import { UserTableComponent } from '../user-table/user-table.component';
 import {
   UserFilterComponent,
   UserFilter,
+  toSafeUserStatus,
+  toSafeUserGender,
 } from '../user-filter/user-filter.component';
 import { NotificationService } from '@core/services/notification.service';
 import { UserCreateDialogComponent } from '../user-create-dialog/user-create-dialog.component';
@@ -47,13 +49,35 @@ export class UserListComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private router: Router,
+    private route: ActivatedRoute,
     private notification: NotificationService,
     private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
+        const status = params['status'] || 'all';
+        const gender = params['gender'] || 'all';
+
+        this.filter = {
+          searchTerm: params['search'] || '',
+          status: toSafeUserStatus(status),
+          gender: toSafeUserGender(gender),
+        };
+
+        this.currentPage = params['page']
+          ? parseInt(params['page'], 10) - 1
+          : 0;
+        this.pageSize = params['per_page']
+          ? parseInt(params['per_page'], 10)
+          : 10;
+
+        this.loadUsers();
+      });
+
     this.setupFilterSubscription();
-    this.loadUsers();
   }
 
   ngOnDestroy(): void {
@@ -67,8 +91,40 @@ export class UserListComponent implements OnInit, OnDestroy {
       .subscribe((filter) => {
         this.filter = filter;
         this.currentPage = 0;
-        this.loadUsers();
+        this.updateUrlParams();
       });
+  }
+
+  private updateUrlParams(): void {
+    const queryParams: any = {
+      page: this.currentPage + 1,
+      per_page: this.pageSize,
+    };
+
+    if (this.filter.searchTerm) {
+      queryParams.search = this.filter.searchTerm;
+    } else {
+      queryParams.search = undefined;
+    }
+
+    if (this.filter.status !== 'all') {
+      queryParams.status = this.filter.status;
+    } else {
+      queryParams.status = undefined;
+    }
+
+    if (this.filter.gender !== 'all') {
+      queryParams.gender = this.filter.gender;
+    } else {
+      queryParams.gender = undefined;
+    }
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   loadUsers(): void {
@@ -85,6 +141,9 @@ export class UserListComponent implements OnInit, OnDestroy {
         error: (error) => {
           console.error('Error loading users:', error);
           this.loading = false;
+          this.notification.showError(
+            'Failed to load users. Please try again.'
+          );
         },
       });
   }
@@ -92,7 +151,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   onPageChange(event: any): void {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.loadUsers();
+    this.updateUrlParams();
   }
 
   viewUserDetails(userId: number): void {
@@ -144,10 +203,10 @@ export class UserListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const deletedUser = { ...this.users[userIndex] };
+    const originalUsers = [...this.users];
+    const originalTotal = this.totalUsers;
 
     this.users = this.users.filter((u) => u.id !== user.id);
-
     this.totalUsers--;
 
     const pendingNotification = this.notification.showInfo('Deleting user...');
@@ -159,9 +218,16 @@ export class UserListComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error deleting user:', error);
+        console.log('Before restoration - users:', this.users.length);
 
-        this.users.splice(userIndex, 0, deletedUser);
-        this.totalUsers++;
+        this.users = originalUsers;
+        this.totalUsers = originalTotal;
+
+        console.log('After restoration - users:', this.users.length);
+        console.log(
+          'Deleted user restored:',
+          this.users.some((u) => u.id === user.id)
+        );
 
         this.notification.dismiss(pendingNotification);
         this.notification.showError('Failed to delete user. Changes reverted.');
@@ -184,13 +250,11 @@ export class UserListComponent implements OnInit, OnDestroy {
         const pendingNotification =
           this.notification.showInfo('Creating user...');
 
-        // Optimistically add user to the displayed list
         this.users = [optimisticUser, ...this.users];
         this.totalUsers++;
 
         this.userService.createUser(formData).subscribe({
           next: (newUser) => {
-            // Replace optimistic user with actual user from server
             this.users = this.users.map((user) =>
               user.id === optimisticUser.id ? newUser : user
             );

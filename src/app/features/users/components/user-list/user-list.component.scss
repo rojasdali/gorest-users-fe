@@ -50,3 +50,14 @@
     margin-top: 20px;
   }
 }
+
+.user-count-info {
+  margin: 10px 0;
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 0.9rem;
+
+  span:last-child {
+    font-style: italic;
+    margin-left: 5px;
+  }
+}

@@ -6,13 +6,26 @@
     </button>
   </div>
 
-  <app-user-filter (filterChange)="onFilterChange($event)"></app-user-filter>
+  <app-user-filter
+    [initialFilter]="filter"
+    (filterChange)="onFilterChange($event)"
+  >
+  </app-user-filter>
 
   <div *ngIf="!loading && users.length === 0">
     No users found or data not loaded. Check console.
   </div>
 
-  <div *ngIf="!loading">Users count: {{ users.length }}</div>
+  <div *ngIf="!loading" class="user-count-info">
+    <span>Showing {{ users.length }} of {{ totalUsers }} users</span>
+    <span
+      *ngIf="
+        filter.searchTerm || filter.status !== 'all' || filter.gender !== 'all'
+      "
+    >
+      (filtered results)
+    </span>
+  </div>
 
   <app-user-table
     [users]="users"
