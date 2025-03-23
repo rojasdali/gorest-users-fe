@@ -1,7 +1,7 @@
 {
   "buildCommand": "npm run build",
   "installCommand": "npm install",
-  "outputDirectory": "dist/gorest-users-fe",
+  "outputDirectory": "dist/gorest-users-fe/browser",
   "github": {
     "silent": true
   },
