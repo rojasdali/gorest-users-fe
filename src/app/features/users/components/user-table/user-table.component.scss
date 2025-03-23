@@ -1,0 +1,169 @@
+@use "variables" as v;
+
+@mixin table-cell-base {
+  font-size: v.$font-size-sm;
+}
+
+@mixin skeleton-element {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.table-container {
+  width: 100%;
+  overflow: auto;
+  margin: 20px 0;
+
+  table {
+    width: 100%;
+
+    th {
+      font-weight: v.$font-weight-medium;
+      color: v.$color-text-secondary;
+      font-size: v.$font-size-sm;
+    }
+
+    td {
+      @include table-cell-base;
+      color: v.$color-text-primary;
+    }
+  }
+
+  tr.mat-row-custom:nth-child(odd) {
+    background-color: white;
+  }
+
+  tr.mat-row-custom:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+
+  .clickable-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.07) !important;
+    }
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 16px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+
+  .status-active {
+    background-color: v.$status-active-bg;
+    color: v.$status-active-text;
+  }
+
+  .status-inactive {
+    background-color: v.$status-inactive-bg;
+    color: v.$status-inactive-text;
+  }
+
+  .status-chip {
+    border-radius: 10px;
+    padding: 1px 4px;
+    font-size: 10px;
+    font-weight: 500;
+    min-width: 75px;
+    max-width: 75px;
+    width: 75px;
+    text-align: center;
+    display: inline-block;
+    line-height: 16px;
+  }
+
+  .no-data-message {
+    padding: 16px;
+    text-align: center;
+    font-style: italic;
+    color: v.$color-text-secondary;
+  }
+
+  // Skeleton styles
+  .skeleton-line {
+    @include skeleton-element;
+    height: 16px;
+    width: 80%;
+  }
+
+  .skeleton-chip {
+    @include skeleton-element;
+    height: 16px;
+    width: 75px;
+    min-width: 75px;
+    border-radius: 10px;
+  }
+
+  .skeleton-actions {
+    display: flex;
+    gap: 8px;
+
+    .skeleton-line {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+    }
+  }
+}
+
+mat-chip {
+  font-weight: v.$font-weight-medium;
+}
+
+.mat-header-cell {
+  font-weight: bold;
+  font-size: var(--font-size-sm);
+}
+
+.mat-cell {
+  font-size: var(--font-size-sm);
+}
+
+.user-id {
+  width: 8%;
+}
+
+.user-name {
+  width: 25%;
+}
+
+.user-email {
+  width: 35%;
+}
+
+.user-gender {
+  width: 15%;
+}
+
+.user-status {
+  width: 10%;
+}
+
+.user-actions {
+  width: 15%;
+  text-align: right;
+}
+
+.action-button {
+  margin-right: 8px;
+}
