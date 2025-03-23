@@ -1,0 +1,59 @@
+<div class="filter-container">
+  <form [formGroup]="filterForm" (ngSubmit)="search($event)">
+    <div class="filter-fields">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search Users</mat-label>
+        <input
+          matInput
+          formControlName="searchTerm"
+          placeholder="Search by name or email"
+        />
+        <mat-icon matPrefix>search</mat-icon>
+        <button
+          *ngIf="filterForm.get('searchTerm')?.value"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="filterForm.get('searchTerm')?.setValue('')"
+          type="button"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option value="all">All</mat-option>
+          <mat-option value="active">Active</mat-option>
+          <mat-option value="inactive">Inactive</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Gender</mat-label>
+        <mat-select formControlName="gender">
+          <mat-option value="all">All</mat-option>
+          <mat-option value="male">Male</mat-option>
+          <mat-option value="female">Female</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button
+        mat-stroked-button
+        color="warn"
+        (click)="resetFilters()"
+        [disabled]="
+          filterForm.get('searchTerm')?.value === '' &&
+          filterForm.get('status')?.value === 'all' &&
+          filterForm.get('gender')?.value === 'all'
+        "
+        aria-label="Reset filters"
+        type="button"
+      >
+        <mat-icon>refresh</mat-icon>
+        Reset
+      </button>
+    </div>
+  </form>
+</div>
