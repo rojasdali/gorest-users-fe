@@ -1,0 +1,93 @@
+<div class="user-details-container">
+  <div class="header-row">
+    <div class="left-section">
+      <button mat-icon-button (click)="goBack()" aria-label="Go back">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2>User Details</h2>
+    </div>
+  </div>
+
+  <div class="loading-container" *ngIf="loading">
+    <mat-card class="skeleton-card">
+      <div class="skeleton-avatar">
+        <div class="skeleton-chip"></div>
+        <div class="skeleton-initials"></div>
+      </div>
+      <div class="skeleton-content">
+        <div class="skeleton-info-row">
+          <div class="skeleton-label"></div>
+          <div class="skeleton-value"></div>
+        </div>
+        <div class="skeleton-info-row">
+          <div class="skeleton-label"></div>
+          <div class="skeleton-value"></div>
+        </div>
+        <div class="skeleton-info-row">
+          <div class="skeleton-label"></div>
+          <div class="skeleton-value"></div>
+        </div>
+      </div>
+      <div class="skeleton-actions">
+        <div class="skeleton-button"></div>
+        <div class="skeleton-button"></div>
+      </div>
+    </mat-card>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <mat-icon>error</mat-icon>
+    <span>{{ error }}</span>
+    <button mat-button color="primary" (click)="goBack()">Go Back</button>
+  </div>
+
+  <mat-card *ngIf="user && !loading">
+    <div
+      class="profile-image-container"
+      [style.background-color]="getAvatarColor(user.id)"
+    >
+      <mat-chip
+        class="status-chip"
+        [ngClass]="
+          user.status === 'active' ? 'status-active' : 'status-inactive'
+        "
+      >
+        {{ user.status | titlecase }}
+      </mat-chip>
+
+      <div class="profile-initials">{{ getInitials(user.name) }}</div>
+
+      <div class="profile-overlay">
+        <h2 class="user-name">{{ user.name }}</h2>
+      </div>
+    </div>
+
+    <mat-card-content>
+      <div class="user-info">
+        <div class="info-row">
+          <span class="label">ID:</span>
+          <span class="value">{{ user.id }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Email:</span>
+          <span class="value">{{ user.email }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Gender:</span>
+          <span class="value">{{ user.gender }}</span>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="accent" (click)="editUser()">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+      <button mat-raised-button color="warn" (click)="deleteUser()">
+        <mat-icon>delete</mat-icon>
+        Delete
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
