@@ -4,5 +4,6 @@
   "outputDirectory": "dist/gorest-users-fe",
   "github": {
     "silent": true
-  }
+  },
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
