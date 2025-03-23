@@ -1,0 +1,302 @@
+@use "variables" as v;
+@use "mixins" as m;
+@use "sass:color";
+
+.user-details-container {
+  padding: v.$spacing-md;
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: v.$spacing-md;
+
+    .left-section {
+      display: flex;
+      align-items: center;
+      gap: v.$spacing-sm;
+    }
+
+    h2 {
+      margin: 0;
+      font-weight: v.$font-weight-medium;
+      font-size: v.$font-size-lg;
+      color: v.$color-text-primary;
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    background-color: v.$status-inactive-bg;
+    color: v.$status-inactive-text;
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+
+    button {
+      margin-left: auto;
+    }
+  }
+
+  mat-card {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: v.$shadow-card;
+  }
+
+  .profile-image-container {
+    position: relative;
+    height: 250px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .status-chip {
+    position: absolute;
+    top: v.$spacing-md;
+    right: v.$spacing-md;
+    box-shadow: v.$shadow-card;
+    font-size: v.$font-size-xs;
+    height: 24px;
+    min-height: 24px;
+    padding: 0 v.$spacing-sm;
+    font-weight: v.$font-weight-medium;
+    border-radius: v.$border-radius-pill;
+
+    &.status-active {
+      background-color: v.$status-active-bg;
+      color: v.$status-active-text;
+    }
+
+    &.status-inactive {
+      background-color: v.$status-inactive-bg;
+      color: v.$status-inactive-text;
+    }
+  }
+
+  .profile-initials {
+    font-size: v.$font-size-display;
+    font-weight: v.$font-weight-medium;
+    color: v.$color-background;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .profile-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: v.$spacing-md;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+
+    .user-name {
+      margin: 0;
+      @include m.text-heading;
+      color: v.$color-background;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  .user-info {
+    padding: v.$spacing-md 0;
+
+    .info-row {
+      display: flex;
+      padding: v.$spacing-sm 0;
+      border-bottom: 1px solid v.$color-divider;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .label {
+        width: 100px;
+        @include m.text-caption;
+        font-weight: v.$font-weight-medium;
+      }
+
+      .value {
+        flex: 1;
+        @include m.text-body-small;
+      }
+    }
+  }
+
+  mat-card-content {
+    padding: v.$spacing-md;
+  }
+
+  mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: v.$spacing-sm;
+    padding: v.$spacing-sm v.$spacing-md v.$spacing-md;
+  }
+
+  // Skeleton styles
+  .skeleton-card {
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: v.$shadow-card;
+  }
+
+  .skeleton-avatar {
+    height: 250px;
+    width: 100%;
+    background-color: color.adjust(v.$color-divider, $lightness: 5%);
+    animation: pulse 1.5s infinite;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .skeleton-chip {
+      position: absolute;
+      top: v.$spacing-md;
+      right: v.$spacing-md;
+      width: 60px;
+      height: 24px;
+      border-radius: v.$border-radius-pill;
+      background-color: rgba(255, 255, 255, 0.2);
+      animation: pulse 1.5s infinite;
+    }
+
+    .skeleton-initials {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.2);
+      animation: pulse 1.5s infinite;
+    }
+  }
+
+  .skeleton-content {
+    padding: v.$spacing-md;
+  }
+
+  .skeleton-info-row {
+    display: flex;
+    padding: v.$spacing-sm 0;
+    border-bottom: 1px solid v.$color-divider;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .skeleton-label {
+      width: 100px;
+      height: 16px;
+      background-color: color.adjust(v.$color-divider, $lightness: 5%);
+      border-radius: v.$border-radius-sm;
+      animation: pulse 1.5s infinite;
+    }
+
+    .skeleton-value {
+      flex: 1;
+      height: 16px;
+      margin-left: v.$spacing-md;
+      background-color: color.adjust(v.$color-divider, $lightness: 5%);
+      border-radius: v.$border-radius-sm;
+      animation: pulse 1.5s infinite;
+    }
+  }
+
+  .skeleton-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: v.$spacing-sm;
+    padding: v.$spacing-sm v.$spacing-md v.$spacing-md;
+  }
+
+  .skeleton-button {
+    height: 36px;
+    width: 80px;
+    background-color: color.adjust(v.$color-divider, $lightness: 5%);
+    border-radius: v.$border-radius-sm;
+    animation: pulse 1.5s infinite;
+  }
+
+  .skeleton-info-line {
+    height: 16px;
+    width: 70%;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    background-color: color.adjust(v.$color-divider, $lightness: 5%);
+    animation: pulse 1.5s infinite;
+  }
+
+  .skeleton-divider {
+    height: 1px;
+    width: 100%;
+    margin: 16px 0;
+    background-color: color.adjust(v.$color-divider, $lightness: 5%);
+    animation: pulse 1.5s infinite;
+  }
+
+  .skeleton-list-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    margin-bottom: 4px;
+
+    .skeleton-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: color.adjust(v.$color-divider, $lightness: 5%);
+      animation: pulse 1.5s infinite;
+      margin-right: 12px;
+    }
+  }
+}
+
+@media screen and (max-width: 599px) {
+  .user-header {
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 16px;
+  }
+
+  .title-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .user-avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
