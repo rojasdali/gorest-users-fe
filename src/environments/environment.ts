@@ -1,5 +1,4 @@
 export const environment = {
-  production: false,
-  apiUrl: 'https://gorest.co.in/public/v2',
-  apiToken: '${API_TOKEN}',
+  apiUrl: import.meta.env['NG_APP_API_URL'],
+  apiToken: import.meta.env['NG_APP_API_TOKEN'],
 };

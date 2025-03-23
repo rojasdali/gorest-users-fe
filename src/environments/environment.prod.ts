@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: '${API_URL}',
-  apiToken: '${API_TOKEN}',
+  apiUrl: import.meta.env['NG_APP_API_URL'],
+  apiToken: import.meta.env['NG_APP_API_TOKEN'],
 };
