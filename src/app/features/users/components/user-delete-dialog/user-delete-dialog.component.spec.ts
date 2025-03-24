@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UserDeleteDialogComponent } from './user-delete-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+
 import { MaterialModule } from '@shared/material.module';
+
+import { UserDeleteDialogComponent } from './user-delete-dialog.component';
 
 describe('UserDeleteDialogComponent', () => {
   let component: UserDeleteDialogComponent;

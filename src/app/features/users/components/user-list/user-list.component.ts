@@ -1,21 +1,23 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router, ActivatedRoute } from '@angular/router';
+
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 
+import { NotificationService } from '@core/services/notification.service';
 import { MaterialModule } from '@shared/material.module';
-import { UserService } from '@users/services';
 import { User } from '@users/models/user.model';
-import { UserTableComponent } from '../user-table/user-table.component';
+import { UserService } from '@users/services';
+
+import { UserCreateDialogComponent } from '../user-create-dialog/user-create-dialog.component';
 import {
   UserFilterComponent,
   UserFilter,
   toSafeUserStatus,
   toSafeUserGender,
 } from '../user-filter/user-filter.component';
-import { NotificationService } from '@core/services/notification.service';
-import { UserCreateDialogComponent } from '../user-create-dialog/user-create-dialog.component';
+import { UserTableComponent } from '../user-table/user-table.component';
 
 @Component({
   selector: 'app-user-list',

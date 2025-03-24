@@ -1,11 +1,12 @@
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Component } from '@angular/core';
+
+import { UserFormService } from '@users/services';
 
 import { BaseUserDialogComponent } from './base-user-dialog.component';
-import { UserFormService } from '@users/services';
 
 @Component({
   selector: 'app-test-dialog',

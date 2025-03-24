@@ -4,8 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { MaterialModule } from '@shared/material.module';
-import { UserFormService } from '@users/services';
 import { User } from '@users/models';
+import { UserFormService } from '@users/services';
 
 import { BaseUserDialogComponent } from '../base-user-dialog/base-user-dialog.component';
 

@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MaterialModule } from '@shared/material.module';
-import { RouterLink, Router } from '@angular/router';
-import { AuthService } from '@core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { RouterLink, Router } from '@angular/router';
+
+import { AuthService } from '@core/services/auth.service';
+import { MaterialModule } from '@shared/material.module';
 
 @Component({
   selector: 'app-header',

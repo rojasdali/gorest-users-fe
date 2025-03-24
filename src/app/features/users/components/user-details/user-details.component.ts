@@ -1,16 +1,15 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 
+import { NotificationService } from '@core/services/notification.service';
 import { MaterialModule } from '@shared/material.module';
 import { getColorByIndex, getInitials } from '@shared/utils';
-import { NotificationService } from '@core/services/notification.service';
-
-import { User } from '@users/models';
-import { UserService } from '@users/services';
 import { UserDeleteDialogComponent } from '@users/components/user-delete-dialog/user-delete-dialog.component';
 import { UserEditDialogComponent } from '@users/components/user-edit-dialog/user-edit-dialog.component';
+import { User } from '@users/models';
+import { UserService } from '@users/services';
 
 @Component({
   selector: 'app-user-details',

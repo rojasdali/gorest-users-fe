@@ -1,9 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from '@shared/material.module';
-import { MatTableModule } from '@angular/material/table';
-import { User } from '@users/models';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
+
+import { MaterialModule } from '@shared/material.module';
+import { User } from '@users/models';
+
+
 import { UserDeleteDialogComponent } from '../user-delete-dialog/user-delete-dialog.component';
 import { UserEditDialogComponent } from '../user-edit-dialog/user-edit-dialog.component';
 

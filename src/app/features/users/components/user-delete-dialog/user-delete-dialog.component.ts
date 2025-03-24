@@ -1,7 +1,9 @@
-import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from '@shared/material.module';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+
+import { MaterialModule } from '@shared/material.module';
+
 
 interface DeleteDialogData {
   userId: number;

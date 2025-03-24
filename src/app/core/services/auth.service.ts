@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+
 import { environment } from '@environments/environment';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 interface AuthState {
   isAuthenticated: boolean;

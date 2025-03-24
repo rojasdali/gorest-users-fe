@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {
   FormBuilder,
@@ -6,9 +7,9 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { MaterialModule } from '@shared/material.module';
+
 import { AuthService } from '@core/services/auth.service';
+import { MaterialModule } from '@shared/material.module';
 
 @Component({
   selector: 'app-login',

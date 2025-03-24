@@ -1,10 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+
+import { UserFormService } from '@users/services';
 
 import { UserEditDialogComponent } from './user-edit-dialog.component';
-import { UserFormService } from '@users/services';
 
 describe('UserEditDialogComponent', () => {
   let component: UserEditDialogComponent;

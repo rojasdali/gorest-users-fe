@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UserCreateDialogComponent } from '@users/components/user-create-dialog/user-create-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+
 import { MaterialModule } from '@shared/material.module';
+import { UserCreateDialogComponent } from '@users/components/user-create-dialog/user-create-dialog.component';
 
 describe('UserCreateDialogComponent', () => {
   let component: UserCreateDialogComponent;

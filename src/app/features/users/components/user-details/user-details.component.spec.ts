@@ -1,16 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { UserDetailsComponent } from './user-details.component';
-import {
-  ActivatedRoute,
-  ParamMap,
-  Router,
-  convertToParamMap,
-} from '@angular/router';
-import { UserService } from '@users/services';
-import { MatDialog } from '@angular/material/dialog';
-import { NotificationService } from '@core/services/notification.service';
-import { BehaviorSubject, of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
+
+import { of } from 'rxjs';
+
+import { NotificationService } from '@core/services/notification.service';
+import { UserService } from '@users/services';
+
+import { UserDetailsComponent } from './user-details.component';
 
 describe('UserDetailsComponent', () => {
   let component: UserDetailsComponent;

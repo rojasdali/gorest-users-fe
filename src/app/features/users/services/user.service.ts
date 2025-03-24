@@ -1,9 +1,12 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+import { environment } from '@environments/environment';
 import { Observable, catchError, map, throwError, forkJoin, of } from 'rxjs';
+
 import { UserFilter } from '@users/components/user-filter/user-filter.component';
 import { User, UserResponse } from '@users/models/user.model';
-import { environment } from '@environments/environment';
+
 
 @Injectable({
   providedIn: 'root',

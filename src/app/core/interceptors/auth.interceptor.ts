@@ -5,8 +5,10 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Observable } from 'rxjs';
+
 import { environment } from '@environments/environment';
+import { Observable } from 'rxjs';
+
 import { AuthService } from '@core/services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (

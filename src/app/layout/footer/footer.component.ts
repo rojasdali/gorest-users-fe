@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { MaterialModule } from '@shared/material.module';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+
+import { MaterialModule } from '@shared/material.module';
 
 @Component({
   selector: 'app-footer',

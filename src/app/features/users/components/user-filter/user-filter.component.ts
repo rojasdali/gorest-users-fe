@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -6,10 +7,11 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MaterialModule } from '@shared/material.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
+
+import { MaterialModule } from '@shared/material.module';
 
 export type UserStatus = 'all' | 'active' | 'inactive';
 export type UserGender = 'all' | 'male' | 'female';
