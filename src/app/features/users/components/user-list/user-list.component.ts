@@ -154,6 +154,8 @@ export class UserListComponent implements OnInit, OnDestroy {
       per_page: this.pageSize,
     };
 
+    delete queryParams['refresh'];
+
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams,

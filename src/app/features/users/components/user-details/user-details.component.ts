@@ -104,8 +104,6 @@ export class UserDetailsComponent implements OnInit {
         if (result) {
           const userName = this.user?.name;
 
-          this.router.navigate(['/users']);
-
           const pendingNotification = this.notification.showInfo(
             `Deleting ${userName}...`
           );
@@ -114,6 +112,11 @@ export class UserDetailsComponent implements OnInit {
             next: () => {
               this.notification.dismiss(pendingNotification);
               this.notification.showSuccess(`${userName} was deleted`);
+              this.router.navigate(['/users'], {
+                queryParams: {
+                  refresh: new Date().getTime(),
+                },
+              });
             },
             error: (error) => {
               this.notification.dismiss(pendingNotification);
