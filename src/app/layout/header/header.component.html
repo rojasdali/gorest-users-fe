@@ -1,5 +1,5 @@
 <mat-toolbar color="white" class="app-header">
-  <a class="logo" [routerLink]="username ? '/users' : '/login'">{{
+  <a class="logo" [routerLink]="['/']" [queryParamsHandling]="'preserve'">{{
     appTitle
   }}</a>
   <span class="spacer"></span>

@@ -6,7 +6,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MaterialModule } from '@shared/material.module';
 import { User } from '@users/models';
 
-
 import { UserDeleteDialogComponent } from '../user-delete-dialog/user-delete-dialog.component';
 import { UserEditDialogComponent } from '../user-edit-dialog/user-edit-dialog.component';
 
@@ -15,6 +14,13 @@ export const DEFAULT_PAGE_SIZE = 10;
 interface TableColumn {
   field: string;
   header: string;
+}
+
+interface SkeletonRow {
+  name: string;
+  email: string;
+  gender: string;
+  status: string;
 }
 
 @Component({
@@ -40,7 +46,7 @@ export class UserTableComponent implements OnInit {
     { field: 'gender', header: 'Gender' },
   ];
 
-  skeletonData: any[] = [];
+  skeletonData: SkeletonRow[] = [];
 
   constructor(private dialog: MatDialog) {}
 

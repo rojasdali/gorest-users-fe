@@ -33,4 +33,10 @@ export class HeaderComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
+  navigateToHome(): void {
+    this.router.navigate(['/'], {
+      queryParamsHandling: 'preserve',
+    });
+  }
 }

@@ -18,7 +18,7 @@ describe('UserDetailsComponent', () => {
     const mockActivatedRoute = {
       snapshot: {
         paramMap: {
-          get: (key: string) => '1',
+          get: (key: string) => (key === 'id' ? '1' : null),
         },
       },
       paramMap: of(convertToParamMap({ id: '1' })),

@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router, ActivatedRoute } from '@angular/router';
+import { PageEvent } from '@angular/material/paginator';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 
@@ -98,44 +99,37 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   private updateUrlParams(): void {
-    const queryParams: any = {
+    const queryParams: Params = {
       page: this.currentPage + 1,
       per_page: this.pageSize,
     };
 
-    if (this.filter.searchTerm) {
-      queryParams.search = this.filter.searchTerm;
-    } else {
-      queryParams.search = undefined;
+    if (this.filter.searchTerm?.trim()) {
+      queryParams['search'] = this.filter.searchTerm;
     }
 
-    if (this.filter.status !== 'all') {
-      queryParams.status = this.filter.status;
-    } else {
-      queryParams.status = undefined;
+    if (this.filter.status && this.filter.status !== 'all') {
+      queryParams['status'] = this.filter.status;
     }
 
-    if (this.filter.gender !== 'all') {
-      queryParams.gender = this.filter.gender;
-    } else {
-      queryParams.gender = undefined;
+    if (this.filter.gender && this.filter.gender !== 'all') {
+      queryParams['gender'] = this.filter.gender;
     }
 
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams,
-      queryParamsHandling: 'merge',
       replaceUrl: true,
     });
   }
 
   loadUsers(): void {
     this.loading = true;
+
     this.userService
       .getUsers(this.currentPage + 1, this.pageSize, this.filter)
       .subscribe({
         next: (response) => {
-          console.log('Users received:', response.data);
           this.users = response.data;
           this.totalUsers = response.meta.pagination.total;
           this.loading = false;
@@ -150,14 +144,26 @@ export class UserListComponent implements OnInit, OnDestroy {
       });
   }
 
-  onPageChange(event: any): void {
+  onPageChange(event: PageEvent): void {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.updateUrlParams();
+
+    const queryParams: Params = {
+      ...this.route.snapshot.queryParams,
+      page: this.currentPage + 1,
+      per_page: this.pageSize,
+    };
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge',
+    });
+
+    this.loadUsers();
   }
 
   viewUserDetails(userId: number): void {
-    console.log('View user:', userId);
     this.router.navigate(['/users', userId]);
   }
 
@@ -238,7 +244,27 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   onFilterChange(filter: UserFilter): void {
-    this.filterChange$.next(filter);
+    this.filter = filter;
+    this.currentPage = 0;
+
+    if (
+      filter.searchTerm === '' &&
+      filter.status === 'all' &&
+      filter.gender === 'all'
+    ) {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {
+          page: 1,
+          per_page: this.pageSize,
+        },
+        replaceUrl: true,
+      });
+    } else {
+      this.updateUrlParams();
+    }
+
+    this.loadUsers();
   }
 
   private userMatchesFilter(user: User): boolean {

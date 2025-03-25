@@ -41,8 +41,8 @@ export class UserDetailsComponent implements OnInit {
           this.user = user;
           this.loading = false;
         },
-        error: (err) => {
-          this.error = 'Failed to load user details';
+        error: (error) => {
+          this.error = `Failed to load user details: ${error.message}`;
           this.loading = false;
         },
       });
@@ -76,12 +76,12 @@ export class UserDetailsComponent implements OnInit {
                 'User details updated successfully'
               );
             },
-            error: (err) => {
+            error: (error) => {
               this.user = originalUser;
 
               this.notification.dismiss(pendingNotification);
               this.notification.showError(
-                'Failed to update user. Please try again.'
+                `Failed to update user: ${error.message}`
               );
             },
           });
@@ -115,10 +115,10 @@ export class UserDetailsComponent implements OnInit {
               this.notification.dismiss(pendingNotification);
               this.notification.showSuccess(`${userName} was deleted`);
             },
-            error: (err) => {
+            error: (error) => {
               this.notification.dismiss(pendingNotification);
               this.notification.showError(
-                'Failed to delete user. Please refresh and try again.'
+                `Failed to delete user: ${error.message}`
               );
             },
           });

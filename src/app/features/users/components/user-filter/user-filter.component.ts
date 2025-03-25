@@ -90,8 +90,14 @@ export class UserFilterComponent implements OnInit, OnDestroy {
   resetFilters(): void {
     this.filterForm.reset({
       searchTerm: '',
-      status: 'all' as UserStatus,
-      gender: 'all' as UserGender,
+      status: 'all',
+      gender: 'all',
+    });
+
+    this.filterChange.emit({
+      searchTerm: '',
+      status: 'all',
+      gender: 'all',
     });
   }
 

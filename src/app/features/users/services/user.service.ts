@@ -1,12 +1,11 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from '@environments/environment';
-import { Observable, catchError, map, throwError, forkJoin, of } from 'rxjs';
+import { Observable, catchError, map, throwError, of } from 'rxjs';
 
 import { UserFilter } from '@users/components/user-filter/user-filter.component';
 import { User, UserResponse } from '@users/models/user.model';
-
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +24,10 @@ export class UserService {
       .set('page', page.toString())
       .set('per_page', perPage.toString());
 
+    if (filter?.searchTerm) {
+      return this.combineSearchResults(filter, page, perPage);
+    }
+
     if (filter) {
       if (filter.status && filter.status !== 'all') {
         params = params.set('status', filter.status);
@@ -32,10 +35,6 @@ export class UserService {
       if (filter.gender && filter.gender !== 'all') {
         params = params.set('gender', filter.gender);
       }
-    }
-
-    if (filter?.searchTerm) {
-      return this.combineSearchResults(filter, page, perPage);
     }
 
     return this.http
@@ -54,54 +53,48 @@ export class UserService {
     page: number,
     perPage: number
   ): Observable<UserResponse> {
-    const nameSearchObs = this.searchByField('name', filter, page, perPage);
-    const emailSearchObs = this.searchByField('email', filter, page, perPage);
-
-    return forkJoin([nameSearchObs, emailSearchObs]).pipe(
-      map(([nameResults, emailResults]) => {
-        const allUsers = [...nameResults.data, ...emailResults.data];
-        const uniqueUsers = allUsers.filter(
-          (user, index, self) =>
-            index === self.findIndex((u) => u.id === user.id)
-        );
-
-        const totalCount = uniqueUsers.length;
-        const totalPages = Math.ceil(totalCount / perPage);
-        const validPage = page > totalPages ? totalPages : page;
-
-        const startIndex = (validPage - 1) * perPage;
-        const endIndex = Math.min(startIndex + perPage, totalCount);
-        const pagedUsers = uniqueUsers.slice(startIndex, endIndex);
-
+    return this.searchByField('name', filter, page, perPage).pipe(
+      map((response) => {
         return {
-          data: pagedUsers,
-          meta: {
-            pagination: {
-              total: totalCount,
-              pages: totalPages,
-              page: validPage,
-              limit: perPage,
-            },
-          },
+          data: response.data,
+          meta: response.meta,
         };
       })
     );
   }
 
-  private processResponse(response: any): UserResponse {
-    const totalCount = response.headers.get('x-pagination-total') || '0';
-    const totalPages = response.headers.get('x-pagination-pages') || '0';
-    const currentPage = response.headers.get('x-pagination-page') || '0';
-    const perPage = response.headers.get('x-pagination-limit') || '0';
+  private processResponse(response: HttpResponse<User[]>): UserResponse {
+    const totalCount = parseInt(
+      response.headers.get('x-pagination-total') || '0',
+      10
+    );
+    const totalPages = parseInt(
+      response.headers.get('x-pagination-pages') || '0',
+      10
+    );
+    const currentPage = parseInt(
+      response.headers.get('x-pagination-page') || '0',
+      10
+    );
+    const perPage = parseInt(
+      response.headers.get('x-pagination-limit') || '0',
+      10
+    );
+
+    const remainingItems = totalCount - (currentPage - 1) * perPage;
+    const expectedItemsOnPage = Math.min(remainingItems, perPage);
+
+    const items = response.body || [];
+    const paginatedItems = items.slice(0, expectedItemsOnPage);
 
     return {
-      data: response.body || [],
+      data: paginatedItems,
       meta: {
         pagination: {
-          total: parseInt(totalCount, 10),
-          pages: parseInt(totalPages, 10),
-          page: parseInt(currentPage, 10),
-          limit: parseInt(perPage, 10),
+          total: totalCount,
+          pages: totalPages,
+          page: currentPage,
+          limit: perPage,
         },
       },
     };
@@ -152,8 +145,11 @@ export class UserService {
   ): Observable<UserResponse> {
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('per_page', perPage.toString())
-      .set(field, filter.searchTerm);
+      .set('per_page', perPage.toString());
+
+    if (filter.searchTerm) {
+      params = params.set(field, filter.searchTerm);
+    }
 
     if (filter.status && filter.status !== 'all') {
       params = params.set('status', filter.status);
@@ -170,7 +166,9 @@ export class UserService {
           console.error(`Error searching by ${field}:`, error);
           return of({
             data: [],
-            meta: { pagination: { total: 0, pages: 0, page: 0, limit: 0 } },
+            meta: {
+              pagination: { total: 0, pages: 0, page: 1, limit: perPage },
+            },
           });
         })
       );
